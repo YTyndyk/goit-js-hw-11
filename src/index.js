@@ -17,13 +17,14 @@ function onFormSubmit(e) {
   pixabayAPI.query = searchQuery;
 
   pixabayAPI.fetchPhotos().then(data => {
-    galleryEl.insertAdjacentHTML(createGalleryCard(data.hits));
+    console.log(data);
+    galleryEl.insertAdjacentHTML('beforeend', createGalleryCard(data.hits));
   });
-
-  function createGalleryCard(hits) {
-    const markup = hits
-      .map(({ webformatURL, tags, likes, views, comments, downloads }) => {
-        return `<div class="photo-card">
+}
+function createGalleryCard(hits) {
+  const markup = hits
+    .map(({ webformatURL, tags, likes, views, comments, downloads }) => {
+      return `<div class="photo-card">
   <img src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
@@ -39,20 +40,20 @@ function onFormSubmit(e) {
       ${comments}
     </p>
     <p class="info-item">
-      <b>Downloads</b>${downloads}
+      <b>Downloads</b>
+      ${downloads}
     </p>
   </div>
 </div>`;
-      })
-      .join('');
-    galleryEl.insertAdjacentHTML('beforeend', markup);
-  }
+    })
+    .join('');
+  galleryEl.insertAdjacentHTML('beforeend', markup);
 }
 
 function onLoadMoreBtnClick() {
   pixabayAPI.page += 1;
   pixabayAPI.fetchPhotos().then(data => {
-    galleryEl.insertAdjacentHTML(createGalleryCard(data.hits));
+    galleryEl.insertAdjacentHTML('beforeend', createGalleryCard(data.hits));
   });
 
   function createGalleryCard(hits) {
@@ -74,7 +75,8 @@ function onLoadMoreBtnClick() {
       ${comments}
     </p>
     <p class="info-item">
-      <b>Downloads</b>${downloads}
+      <b>Downloads</b>
+      ${downloads}
     </p>
   </div>
 </div>`;
