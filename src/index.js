@@ -29,6 +29,7 @@ function onFormSubmit(e) {
   pixabayAPI.fetchPhotos().then(data => {
     console.log(data);
     galleryEl.insertAdjacentHTML('beforeend', createGalleryCard(data.hits));
+    lightbox.refresh();
 
     if (data.hits.length === 0) {
       Notify.info(
@@ -37,10 +38,11 @@ function onFormSubmit(e) {
       return;
     }
   });
+  loadMoreBtn.classList.remove('is-hidden');
 }
 
 function createGalleryCard(hits) {
-  const markup = hits
+  return hits
     .map(
       ({
         webformatURL,
@@ -52,82 +54,39 @@ function createGalleryCard(hits) {
         downloads,
       }) => {
         return `<div class="photo-card">
-        <a href="${largeImageURL}">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
-  </a>
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</b>
-      ${likes}
-    </p>
-    <p class="info-item">
-      <b>Views</b>
-      ${views}
-    </p>
-    <p class="info-item">
-      <b>Comments</b>
-      ${comments}
-    </p>
-    <p class="info-item">
-      <b>Downloads</b>
-      ${downloads}
-    </p>
-  </div>
-</div>`;
+    <a href="${largeImageURL}">
+      <img class="photo-img" src="${webformatURL}" alt="${tags}" loading="lazy" />
+    </a>
+    <div class="info">
+      <p class="info-item">
+        <b>Likes</b>
+        ${likes}
+      </p>
+      <p class="info-item">
+        <b>Views</b>
+        ${views}
+      </p>
+      <p class="info-item">
+        <b>Comments</b>
+        ${comments}
+      </p>
+      <p class="info-item">
+        <b>Downloads</b>
+        ${downloads}
+      </p>
+    </div>
+    </div>`;
       }
     )
     .join('');
-  galleryEl.insertAdjacentHTML('beforeend', markup);
-  lightbox.refresh();
 }
 
 function onLoadMoreBtnClick() {
   pixabayAPI.page += 1;
   pixabayAPI.fetchPhotos().then(data => {
     galleryEl.insertAdjacentHTML('beforeend', createGalleryCard(data.hits));
-  });
-
-  function createGalleryCard(hits) {
-    const markup = hits
-      .map(
-        ({
-          webformatURL,
-          largeImageURL,
-          tags,
-          likes,
-          views,
-          comments,
-          downloads,
-        }) => {
-          return `<div class="photo-card">
-          <a href="${largeImageURL}">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
-  </a>
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</b>
-      ${likes}
-    </p>
-    <p class="info-item">
-      <b>Views</b>
-      ${views}
-    </p>
-    <p class="info-item">
-      <b>Comments</b>
-      ${comments}
-    </p>
-    <p class="info-item">
-      <b>Downloads</b>
-      ${downloads}
-    </p>
-  </div>
-</div>`;
-        }
-      )
-      .join('');
-    galleryEl.insertAdjacentHTML('beforeend', markup);
     lightbox.refresh();
-  }
+  });
 }
 
 searchFormEl.addEventListener('submit', onFormSubmit);
