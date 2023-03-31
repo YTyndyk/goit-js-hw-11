@@ -99,7 +99,11 @@ async function onLoadMoreBtnClick() {
 
   try {
     const { data } = await pixabayAPI.fetchPhotos();
-
+    isShown += data.hits.length;
+    if (isShown >= data.total) {
+      Notify.info("We're sorry, but you've reached the end of search results.");
+      loadMoreBtn.classList.add('is-hidden');
+    }
     galleryEl.insertAdjacentHTML('beforeend', createGalleryCard(data.hits));
     lightbox.refresh();
   } catch (err) {
