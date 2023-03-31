@@ -26,19 +26,31 @@ function onFormSubmit(e) {
 
   isShown = 0;
 
-  pixabayAPI.fetchPhotos().then(data => {
+  pixabayAPI.fetchPhotos().then(({ data }) => {
     console.log(data);
     galleryEl.insertAdjacentHTML('beforeend', createGalleryCard(data.hits));
+    loadMoreBtn.classList.remove('is-hidden');
     lightbox.refresh();
 
-    if (data.hits.length === 0) {
+    if (!data.hits.length) {
       Notify.info(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+      loadMoreBtn.classList.add('is-hidden');
       return;
     }
+    isShown += data.hits.length;
+
+    if (isShown < data.total) {
+      Notify.success(`Hooray! We found ${data.total} images !!!`);
+      loadMoreBtn.classList.remove('is-hidden');
+    }
+
+    if (isShown >= data.total) {
+      Notify.info("We're sorry, but you've reached the end of search results.");
+      loadMoreBtn.classList.add('is-hidden');
+    }
   });
-  loadMoreBtn.classList.remove('is-hidden');
 }
 
 function createGalleryCard(hits) {
@@ -83,7 +95,7 @@ function createGalleryCard(hits) {
 
 function onLoadMoreBtnClick() {
   pixabayAPI.page += 1;
-  pixabayAPI.fetchPhotos().then(data => {
+  pixabayAPI.fetchPhotos().then(({ data }) => {
     galleryEl.insertAdjacentHTML('beforeend', createGalleryCard(data.hits));
     lightbox.refresh();
   });
