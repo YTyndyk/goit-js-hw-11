@@ -20,4 +20,7 @@ export class PixabayAPI {
       },
     });
   }
+  resetPage() {
+    this.page = 1;
+  }
 }

@@ -16,6 +16,7 @@ async function onFormSubmit(e) {
 
   const searchQuery = e.currentTarget.elements.searchQuery.value.trim();
   pixabayAPI.query = searchQuery;
+  pixabayAPI.resetPage();
 
   if (searchQuery === '') {
     Notify.warning('Please, fill the main field');
