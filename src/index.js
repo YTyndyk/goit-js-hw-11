@@ -42,12 +42,12 @@ async function onFormSubmit(e) {
 
     isShown += data.hits.length;
 
-    if (isShown < data.total) {
-      Notify.success(`Hooray! We found ${data.total} images !!!`);
+    if (isShown < data.totalHits) {
+      Notify.success(`Hooray! We found ${data.totalHits} images !!!`);
       loadMoreBtn.classList.remove('is-hidden');
     }
 
-    if (isShown >= data.total) {
+    if (isShown >= data.totalHits) {
       Notify.info("We're sorry, but you've reached the end of search results.");
       loadMoreBtn.classList.add('is-hidden');
     }
@@ -101,7 +101,7 @@ async function onLoadMoreBtnClick() {
   try {
     const { data } = await pixabayAPI.fetchPhotos();
     isShown += data.hits.length;
-    if (isShown >= data.total) {
+    if (isShown >= data.totalHits) {
       Notify.info("We're sorry, but you've reached the end of search results.");
       loadMoreBtn.classList.add('is-hidden');
     }
